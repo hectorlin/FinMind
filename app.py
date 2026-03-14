@@ -45,5 +45,7 @@ for stock_id, df_list in all_data.items():
     if not df_list:
         continue
     full_df = pd.concat(df_list, ignore_index=True)
+    if "stock_id" in full_df.columns:
+        full_df = full_df.drop(columns=["stock_id"])
     output_name = f"output_{stock_id}_{start_date.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}.csv"
     full_df.to_csv(output_name, index=False, encoding="utf-8-sig")
