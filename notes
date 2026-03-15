@@ -12,7 +12,7 @@
 from FinMind.data import DataLoader
 
 api = DataLoader()
-api.login_by_token(api_token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRlIjoiMjAyNi0wMy0xMyAyMjowODoxMyIsInVzZXJfaWQiOiJ3ZWlzZW5saW4yIiwiZW1haWwiOiJzaWx2ZXJsaW4yQG1zbi5jb20iLCJpcCI6IjYwLjI0OC4xODQuMTM5In0.oBbVN--fbv2ElVdF0jDbDo1to4hAsO9DSC5rA7sMMxQ')
+api.login_by_token(api_token='.eyJkYXRlIjoiMjAyNi0wMy0xMyAyMjowODoxMyIsInVzZXJfaWQiOiJ3ZWlzZW5saW4yIiwiZW1haWwiOiJzaWx2ZXJsaW4yQG1zbi5jb20iLCJpcCI6IjYwLjI0OC4xODQuMTM5In0.oBbVN--fbv2ElVdF0jDbDo1to4hAsO9DSC5rA7sMMxQ')
 df = api.taiwan_stock_kbar(
     stock_id='2330',
     date="2023-09-22"
@@ -38,7 +38,7 @@ import pandas as pd
 from FinMind.data import DataLoader
 
 api = DataLoader()
-api.login_by_token(api_token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRlIjoiMjAyNi0wMy0xMyAyMjowODoxMyIsInVzZXJfaWQiOiJ3ZWlzZW5saW4yIiwiZW1haWwiOiJzaWx2ZXJsaW4yQG1zbi5jb20iLCJpcCI6IjYwLjI0OC4xODQuMTM5In0.oBbVN--fbv2ElVdF0jDbDo1to4hAsO9DSC5rA7sMMxQ')
+api.login_by_token(api_token='.eyJkYXRlIjoiMjAyNi0wMy0xMyAyMjowODoxMyIsInVzZXJfaWQiOiJ3ZWlzZW5saW4yIiwiZW1haWwiOiJzaWx2ZXJsaW4yQG1zbi5jb20iLCJpcCI6IjYwLjI0OC4xODQuMTM5In0.oBbVN--fbv2ElVdF0jDbDo1to4hAsO9DSC5rA7sMMxQ')
 
 start_date = datetime(2023, 9, 22)
 end_date = datetime(2023, 9, 30)
@@ -88,7 +88,7 @@ from FinMind.data import DataLoader
 from FinMind.schema.data import Dataset
 
 api = DataLoader()
-token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRlIjoiMjAyNi0wMy0xMyAyMjowODoxMyIsInVzZXJfaWQiOiJ3ZWlzZW5saW4yIiwiZW1haWwiOiJzaWx2ZXJsaW4yQG1zbi5jb20iLCJpcCI6IjYwLjI0OC4xODQuMTM5In0.oBbVN--fbv2ElVdF0jDbDo1to4hAsO9DSC5rA7sMMxQ'
+token = '.eyJkYXRlIjoiMjAyNi0wMy0xMyAyMjowODoxMyIsInVzZXJfaWQiOiJ3ZWlzZW5saW4yIiwiZW1haWwiOiJzaWx2ZXJsaW4yQG1zbi5jb20iLCJpcCI6IjYwLjI0OC4xODQuMTM5In0.oBbVN--fbv2ElVdF0jDbDo1to4hAsO9DSC5rA7sMMxQ'
 api.login_by_token(api_token=token)
 
 with open("date.txt", "r", encoding="utf-8") as f:
