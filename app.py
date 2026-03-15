@@ -9,7 +9,7 @@ from FinMind.data import DataLoader
 from tqdm import tqdm
 
 api = DataLoader()
-token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRlIjoiMjAyNi0wMy0xMyAyMjowODoxMyIsInVzZXJfaWQiOiJ3ZWlzZW5saW4yIiwiZW1haWwiOiJzaWx2ZXJsaW4yQG1zbi5jb20iLCJpcCI6IjYwLjI0OC4xODQuMTM5In0.oBbVN--fbv2ElVdF0jDbDo1to4hAsO9DSC5rA7sMMxQ'
+token = '.eyJkYXRlIjoiMjAyNi0wMy0xMyAyMjowODoxMyIsInVzZXJfaWQiOiJ3ZWlzZW5saW4yIiwiZW1haWwiOiJzaWx2ZXJsaW4yQG1zbi5jb20iLCJpcCI6IjYwLjI0OC4xODQuMTM5In0.oBbVN--fbv2ElVdF0jDbDo1to4hAsO9DSC5rA7sMMxQ'
 api.login_by_token(api_token=token)
 
 with open("date.txt", "r", encoding="utf-8") as f:
