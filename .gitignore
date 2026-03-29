@@ -3,3 +3,10 @@ __pycache__/
 .env
 *.log
 output_*.csv
+
+# .NET build outputs
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
