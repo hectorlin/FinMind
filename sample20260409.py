@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 import os
+import time
 from pathlib import Path
 
 import pandas as pd
@@ -9,8 +10,6 @@ from loguru import logger
 from FinMind.data import DataLoader
 
 ROOT = Path(__file__).resolve().parent
-OUTPUT_DIR = ROOT / "kbar_by_symbol"
-
 DEFAULT_TOKEN = ""
 
 def _load_dotenv() -> None:
@@ -30,16 +29,13 @@ def _load_dotenv() -> None:
 
 
 STOCK_ID_LIST = [
-    "2330",
-    "0050",
-    "2002",
-    "2317",
-    "1101",
-    "0056",
-    "2890",
     "00878",
-    "00713",
+    "00919",
+    "0056",
+    "0050",
 ]
+MAX_RUN_RETRIES = 10
+RETRY_DELAY_SECONDS = 3
 
 
 def _resolve_token() -> str:
@@ -55,9 +51,11 @@ def main() -> None:
     data_loader = DataLoader()
     data_loader.login_by_token(token)
 
+    start_date = "2025-01-01"
+    end_date = "2025-12-31"
     cal = data_loader.taiwan_stock_trading_date(
-        start_date="2023-01-01",
-        end_date="2023-01-31",
+        start_date=start_date,
+        end_date=end_date,
     )
     trading_date_list = cal["date"].astype(str).tolist()
 
@@ -73,27 +71,48 @@ def main() -> None:
     elapsed = datetime.datetime.now() - start
     logger.info("fetch kbar: {}", elapsed)
 
-    combined = pd.concat(dfs, ignore_index=True)
-    if combined.empty:
+    non_empty = [df for df in dfs if df is not None and not df.empty]
+    if not non_empty:
         logger.warning("no kbar rows; skip writing csv")
         return
 
+    combined = pd.concat(non_empty, ignore_index=True).drop_duplicates()
     symbol_col = "stock_id"
     if symbol_col not in combined.columns:
         raise SystemExit(f"expected column {symbol_col!r}, got {list(combined.columns)}")
 
-    sort_keys = [c for c in ("date", "minute") if c in combined.columns]
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
+    done = 0
     for symbol, part in combined.groupby(symbol_col, sort=False):
-        out = part.sort_values(sort_keys, kind="mergesort") if sort_keys else part
-        safe = str(symbol).strip().replace("/", "_")
-        path = OUTPUT_DIR / f"{safe}.csv"
-        out.to_csv(path, index=False)
-        logger.info("wrote {} rows -> {}", len(out), path)
+        out = part.copy()
+        if symbol_col in out.columns:
+            out = out.drop(columns=[symbol_col])
+        sort_keys = [c for c in ("date", "minute") if c in out.columns]
+        if sort_keys:
+            out = out.sort_values(sort_keys, kind="mergesort").reset_index(drop=True)
 
-    logger.info("done: {} symbols -> {}", combined[symbol_col].nunique(), OUTPUT_DIR)
+        safe = str(symbol).strip().replace("/", "_")
+        path = ROOT / f"output_{safe}_{start_date}_{end_date}.csv"
+        out.to_csv(path, index=False, encoding="utf-8-sig")
+        logger.info("wrote {} rows -> {}", len(out), path)
+        done += 1
+
+    logger.info("done: {} symbols", done)
+
+
+def run_with_retry() -> None:
+    last_error: Exception | None = None
+    for attempt in range(1, MAX_RUN_RETRIES + 1):
+        try:
+            logger.info("run attempt {}/{}", attempt, MAX_RUN_RETRIES)
+            main()
+            return
+        except Exception as exc:
+            last_error = exc
+            logger.warning("run failed ({}/{}): {}", attempt, MAX_RUN_RETRIES, exc)
+            if attempt < MAX_RUN_RETRIES:
+                time.sleep(RETRY_DELAY_SECONDS)
+    raise SystemExit(f"run failed after {MAX_RUN_RETRIES} retries: {last_error}")
 
 
 if __name__ == "__main__":
-    main()
+    run_with_retry()
