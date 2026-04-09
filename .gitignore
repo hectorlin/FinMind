@@ -4,6 +4,10 @@ __pycache__/
 *.log
 output_*.csv
 
+# Python venv & generated kbar exports
+.venv/
+kbar_by_symbol/
+
 # .NET build outputs
 **/bin/
 **/obj/
